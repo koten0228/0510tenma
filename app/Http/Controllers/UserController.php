@@ -27,13 +27,17 @@ class UserController extends Controller
     public function edit(Request $request)
     {
         //
-        $user = User::where('id','=',$request->id)->first();
+        if($user = User::find($request->id)){
+            $user = User::where('id','=',$request->id)->first();
+            return view('user.edit')->with([
+                'user'=> $user,
+            ]);
+        }else{
+            return back();
+        }
 
         
 
-        return view('user.edit')->with([
-            'user'=> $user,
-        ]);
 
 
     }

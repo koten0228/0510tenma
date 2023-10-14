@@ -73,11 +73,17 @@ class ItemController extends Controller
     {      
 
 
-        $item = Item::find($request->id);
+        if($item = Item::find($request->id)){
+            $item = Item::find($request->id);
+            return view('item.edit',[
+                "item"=>$item
+            ]);
+        }else{
+            return back();
+        }
+        
 
-        return view('item.edit',[
-            "item"=>$item
-        ]);
+        
     }
 
 
