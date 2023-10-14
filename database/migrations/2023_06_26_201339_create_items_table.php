@@ -4,28 +4,36 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateItemsTable extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id')->unsigned()->index();
-            $table->string('name', 100)->index();
-            $table->string('type', 100)->nullable();
-            $table->string('detail', 500)->nullable();
+            $table->bigInteger('user_id')->unsigned();
+            $table->tinyInteger('type');
+            $table->string('name',100);
+            $table->integer('price');
+            $table->string('detail',500);
+            $table->text('img')->nullable();
+            $table->string('status',16);
             $table->timestamps();
+
         });
     }
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('items');
     }
-};
+}

@@ -1,54 +1,47 @@
-@extends('adminlte::page')
-
-@section('title', '商品一覧')
-
-@section('content_header')
-    <h1>商品一覧</h1>
-@stop
-
+@extends('item.layout')
 @section('content')
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">商品一覧</h3>
-                    <div class="card-tools">
-                        <div class="input-group input-group-sm">
-                            <div class="input-group-append">
-                                <a href="{{ url('items/add') }}" class="btn btn-default">商品登録</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body table-responsive p-0">
-                    <table class="table table-hover text-nowrap">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>名前</th>
-                                <th>種別</th>
-                                <th>詳細</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($items as $item)
-                                <tr>
-                                    <td>{{ $item->id }}</td>
-                                    <td>{{ $item->name }}</td>
-                                    <td>{{ $item->type }}</td>
-                                    <td>{{ $item->detail }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-@stop
 
-@section('css')
-@stop
 
-@section('js')
-@stop
+  <div class="col-xs-10 " style="margin-top:100px;"> 
+    
+            <p><a class="btn btn-outline-primary btn-sm" href="{{ url('/item/create') }}">新規追加</a></p>           
+    
+    <table class="table">
+      <tr> 
+        <th>No：</th>
+        <th>カテゴリ</th>
+        <th>商品名</th>
+        <th>金額</th>
+        <th>販売状況</th>
+        <th>更新日時</th>  
+      </tr>
+      @foreach ($items as $val)
+        <tr>
+            <td><div>{{ $val->id}}</div></td> 
+            <td>
+              @if($val->type == 1)
+                <p>野菜</P>
+              @elseif($val->type == 2)
+                <p>肉</P>
+              @elseif($val->type == 3)
+                <p>海産物</P>
+              @elseif($val->type == 4)
+                <p>果物</P>
+              @elseif($val->type == 5)
+                <p>飲料</P>
+              @endif 
+            </td>
+            <td><div>{{ $val->name}}</div></td>
+            <td><div>￥{{ number_format($val->price)}}</div></td>
+            <td><div>{{ $val->status}}</div></td>
+            <td><div>{{ $val->updated_at}}</div></td>  
+
+            <th><a href="/item/edit/{{ $val->id }}">編集/削除</a></th>
+        </tr>
+      @endforeach 
+
+    </table>
+  </div> 
+
+
+@endsection

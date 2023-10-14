@@ -3,26 +3,78 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\item;
 
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
+            
+
+    //ホーム画面に遷移
+    public function gohome()
     {
-        $this->middleware('auth');
+        //一覧画面表示
+        $item = Item::all();
+        $item = Item::latest('updated_at')->get();
+
+        return view('home/home',[
+            "items" => $item
+        ]);
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function index()
-    {
-        return view('home');
+    //商品一覧表示
+    public function homelist(Request $request)
+    {   
+        if(isset($_GET["word"])){
+            $category = $request->input('search_category');
+            $word = $request->input('word');
+            $num = null;
+            if($category == 'type' && $word == '野菜'){
+                $num = 1;
+            } elseif($category == 'type' && $word == '肉'){
+                $num = 2;
+            } elseif($category == 'type' && $word == '海産物'){
+                $num = 3;
+            } elseif($category == 'type' && $word == '果物'){
+                $num = 4;
+            } elseif($category == 'type' && $word == '飲料'){
+                $num = 5;
+            };
+            if($category == 'type'){
+                $homeitems = item::where($category, '=', $num)->paginate(20)->withQueryString();
+            } else {
+                $homeitems = item::where($category, 'LIKE', '%'.$word.'%')->paginate(20)->withQueryString();
+            };
+            return view('home/list', [
+                'items' => $homeitems,
+                'search_category' => $category,
+                'word' => $word
+            ]);  
+        } else {
+            $homeitems = item::orderBy('id', 'asc')->paginate(20);
+            return view('home/list', [
+                'items' => $homeitems,
+                'search_category' => null,
+                'word' => null
+            ]);
+        }
     }
+
+    //詳細ページ表示
+    public function viewdetail(Request $request)
+    {
+        $id = $request->input('id');
+        $item = item::find($id);
+        return view('home/detail', [
+            'item' => $item
+        ]);
+    }
+
+    //詳細検索ページ表示
+    public function detailsearch()
+    {
+        return view('home/dsearch');
+    }
+
+    
 }
+

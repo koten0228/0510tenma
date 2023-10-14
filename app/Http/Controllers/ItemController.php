@@ -2,56 +2,142 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+   //今回使うモデルを記載
 use App\Models\Item;
 
 class ItemController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
+        //一覧画面表示
+    public function index(Request $request)
     {
-        $this->middleware('auth');
+        $item = Item::all();
+
+        return view('item.index', [   
+            "items" => $item
+        ]);
+    }
+    
+    //登録画面表示
+    public function create()
+    {
+        return view('item.create');
     }
 
-    /**
-     * 商品一覧
-     */
-    public function index()
-    {
-        // 商品一覧取得
-        $items = Item::all();
 
-        return view('item.index', compact('items'));
-    }
 
-    /**
-     * 商品登録
-     */
-    public function add(Request $request)
-    {
-        // POSTリクエストのとき
-        if ($request->isMethod('post')) {
-            // バリデーション
-            $this->validate($request, [
-                'name' => 'required|max:100',
-            ]);
 
-            // 商品登録
-            Item::create([
-                'user_id' => Auth::user()->id,
-                'name' => $request->name,
-                'type' => $request->type,
-                'detail' => $request->detail,
-            ]);
+    //登録フォームに入力された値をDBに保存
+    public function store(Request $request)
+    {   
+        $request->validate([
+            'name' => 'required|max:25',
+            'price'=>'required|numeric|min:10',
+            'detail' => 'required|max:500',
+            'status' => 'required',
+            'img' => 'nullable|file|max:50',
+            
+        ]);
+        if(isset($request->img)){
+            $img = base64_encode(file_get_contents($request->img->getRealPath()));
 
-            return redirect('/items');
+        }else{
+            $img=null;
         }
 
-        return view('item.add');
+
+
+
+            
+        // 新規取得する
+        Item::create([
+            'user_id'=>1,
+            'type'=>$request->type,
+            'name'=>$request->name,
+            'price'=>$request->price,
+            'detail'=>$request->detail,
+            'status'=>$request->status,
+            'img'=>$img,        
+
+        ]);
+
+        return redirect('/item/index');
     }
+
+
+
+
+    //編集画面に編集したいデータを表示
+    public function edit(Request $request)
+    {      
+
+
+        $item = Item::find($request->id);
+
+        return view('item.edit',[
+            "item"=>$item
+        ]);
+    }
+
+
+    //編集画面で表示したデータを編集し保存
+    public function edit_save(Request $request)
+    {   
+        $request->validate([
+            'type' => 'required',
+            'name' => 'required|max:25',
+            'price'=>'required|numeric|min:10',
+            'detail' => 'required|max:500',
+            'status' => 'required',
+            'img' => 'nullable|file|max:50',
+        ]);
+
+        if(isset($request->img)){
+            $img = base64_encode(file_get_contents($request->img->getRealPath()));
+
+        }else{
+            $img=null;
+        }
+
+
+        $item = Item::find($request->id);
+
+        // 新規入力情報追加したものを取得する
+        $item->id = $request->id;
+        $item->type = $request->type;
+        $item->name = $request->name;
+        $item->price = $request->price;
+        $item->detail = $request->detail;
+        $item->status = $request->status;
+        if(isset($request->img)){
+            $item->img = $img;
+        }
+        
+
+        
+            // 保存（更新）
+            $item->save();
+
+        return redirect('/item/index');
+    }
+
+            // 情報を削除する
+        public function destroy(Request $request,$id)
+        {   
+            $item = Item::find($id);
+
+            $item->delete();
+            return redirect('/item/index');
+        }
+    
+
+    
+    //
+    public function items()
+    {
+        return $this->hasMany(Item::class);
+    }
+
+
 }
