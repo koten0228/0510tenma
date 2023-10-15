@@ -12,7 +12,8 @@ class ItemController extends Controller
         //一覧画面表示
     public function index(Request $request)
     {
-        $item = Item::all();
+        // $item = Item::all();
+        $item = Item::paginate(10);
 
         return view('item.index', [   
             "items" => $item

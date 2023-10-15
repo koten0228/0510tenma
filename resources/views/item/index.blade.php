@@ -3,8 +3,13 @@
 
 
   <div class="col-xs-10 " style="margin-top:100px;"> 
-    
-            <p><a class="btn btn-outline-primary btn-sm" href="{{ url('/item/create') }}">新規追加</a></p>           
+    @if (count($items) >0)
+      <p>全{{ $items->total() }}件中 {{  ($items->currentPage() -1) * $items->perPage() + 1}} - 
+           {{ (($items->currentPage() -1) * $items->perPage() + 1) + (count($items) -1)  }}件のデータが表示されています。</p>
+    @else
+      <p>データがありません。</p>
+    @endif 
+      <p><a class="btn btn-outline-primary btn-sm" href="{{ url('/item/create') }}">新規追加</a></p>           
     
     <table class="table">
       <tr> 
@@ -41,6 +46,12 @@
       @endforeach 
 
     </table>
+    <style>
+            .pagination { justify-content: center; }
+    </style>
+    <div class="mt-3" style="justify-content: center">
+            {{ $items->links('pagination::bootstrap-4') }}
+    </div>
   </div> 
 
 
