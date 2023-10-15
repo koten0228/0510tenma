@@ -37,6 +37,11 @@ Route::middleware(['auth'])->group(function () {
 Route::group(['middleware' => ['auth', 'can:admin']], function () {
     Route::get('/user/list',[UserController::class,'list']);
     Route::get('/item/create', [App\Http\Controllers\ItemController::class, 'create']);
+    Route::get('/item/index',[App\Http\Controllers\ItemController::class,'index']);
+    Route::post('/item/create', [App\Http\Controllers\ItemController::class, 'store']);
+    Route::get('/item/edit/{id}', [App\Http\Controllers\ItemController::class, 'edit']);
+    Route::post('/item/edit/{id}', [App\Http\Controllers\ItemController::class, 'edit_save']);
+    Route::delete('/item/edit/{id}', [App\Http\Controllers\ItemController::class, 'destroy']);
     Route::get('/user/list',[App\Http\Controllers\UserController::class,'list']);
     Route::get('/user/edit/{id}',[App\Http\Controllers\UserController::class,'edit']);
     Route::post('/user/userEdit',[App\Http\Controllers\UserController::class,'userEdit']);
@@ -44,10 +49,3 @@ Route::group(['middleware' => ['auth', 'can:admin']], function () {
 });
 
 
-Route::get('/item/index',[App\Http\Controllers\ItemController::class,'index']);
-
-Route::post('/item/create', [App\Http\Controllers\ItemController::class, 'store']);
-
-Route::get('/item/edit/{id}', [App\Http\Controllers\ItemController::class, 'edit']);
-Route::post('/item/edit/{id}', [App\Http\Controllers\ItemController::class, 'edit_save']);
-Route::delete('/item/edit/{id}', [App\Http\Controllers\ItemController::class, 'destroy']);
