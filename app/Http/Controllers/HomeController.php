@@ -50,7 +50,7 @@ class HomeController extends Controller
                 'word' => $word
             ]);  
         } else {
-            $homeitems = item::orderBy('id', 'asc')->paginate(20);
+            $homeitems = item::orderBy('id', 'asc')->paginate(15);
             return view('home/list', [
                 'items' => $homeitems,
                 'search_category' => null,
