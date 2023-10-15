@@ -63,10 +63,14 @@ class HomeController extends Controller
     public function viewdetail(Request $request)
     {
         $id = $request->input('id');
-        $item = item::find($id);
-        return view('home/detail', [
-            'item' => $item
-        ]);
+        if($item = item::find($id)){
+            $item = item::find($id);
+            return view('home/detail', [
+                'item' => $item
+            ]);
+        }else{
+            return back();
+        }
     }
 
     //詳細検索ページ表示
