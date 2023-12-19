@@ -12,11 +12,11 @@
 - ユーザー管理機能
 
 ## 開発環境
-'''
+```
 PHP　8.1.17
 MySQL 10.4.28
 Laravel 10.26.2
-'''
+```
 
 ##　設計書
 [設計書ページへ](https://drive.google.com/drive/folders/1V3PaW3DXT3c2IquSnEaVyJAjyYVpe8Ow?usp=sharing)
@@ -25,7 +25,7 @@ Laravel 10.26.2
 [アプリケーションページへ](https://techis-tenma0510-fc86b418c0e4.herokuapp.com/)
 
 ###　テストアカウント情報
-'''
+```
 メールアドレス：admin@gmail.com
 パスワード：techis0510
-'''
+```
